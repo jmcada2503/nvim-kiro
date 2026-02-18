@@ -12,6 +12,7 @@
 
 * [Overview](#overview)
 * [Requirements](#requirements)
+* [Installation](#installation)
 * [Commands](#commands)
 * [Keybindings](#keybindings)
 * [Configuration](#configuration)
@@ -46,6 +47,38 @@ For installation instructions, see the [kiro-cli installation guide](https://git
 To verify kiro-cli is installed:
 ```bash
 which kiro-cli
+```
+
+---
+<br>
+
+## Installation
+
+### Using lazy.nvim
+
+```lua
+{
+    'jmcada/nvim-kiro',
+    config = function()
+        require('nvim-kiro').setup()
+    end
+}
+```
+
+Or with [config options](#configuration)
+
+```lua
+{
+    'jmcada/nvim-kiro',
+    config = function()
+        require('nvim-kiro').setup({
+            debug = false,
+            window_type = 'split',
+            reload = true,
+            close_keymap = '<C-q>'
+        })
+    end
+}
 ```
 
 ---
