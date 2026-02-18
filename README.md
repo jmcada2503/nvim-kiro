@@ -103,8 +103,8 @@ These keybindings are active **only** in the Kiro chat buffer:
 
 | Mode | Key | Action | Notes |
 |------|-----|--------|-------|
-| Terminal | `<C-q>` | Hide chat window | Configurable via `close_keymap` |
 | Terminal | `<Esc>` | Hide chat window | Returns to previous buffer |
+| Terminal | `<C-q>` | Hide chat window | Configurable via `close_keymap` |
 | Normal | `q` | Close chat window | Must exit terminal mode first (`<C-\><C-n>`) |
 
 ### Exiting Terminal Mode
