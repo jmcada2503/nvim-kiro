@@ -1,6 +1,7 @@
 local M = {}
+local log = require("nvim-kiro.util.log")
 
-local state = {
+_G.NvimKiroPlugin.state = {
     bufnr = nil,
     chan_id = nil,
     win_id = nil,
@@ -8,6 +9,9 @@ local state = {
     last_context = nil,
     last_input = "",
 }
+local state = _G.NvimKiroPlugin.state
+
+print("test: ", _G.NvimKiroPlugin)
 
 local config = _G.NvimKiroPlugin.config
 
@@ -40,11 +44,22 @@ local function update_context()
         if bufname ~= "" and vim.bo[state.source_bufnr].buftype == "" then
             local cwd = vim.fn.getcwd()
             local relative_path = vim.fn.fnamemodify(bufname, ":.")
-            local line_num = vim.api.nvim_buf_get_mark(state.source_bufnr, ".")[1]
+            local line_num = vim.api.nvim_win_get_cursor(0)[1]
             state.last_context =
                 string.format("\n[Context: file=%s line=%d root=%s]", relative_path, line_num, cwd)
         end
     end
+end
+
+function M.is_chat_open()
+    if
+        state.chan_id
+        and state.source_bufnr
+        and vim.api.nvim_buf_is_valid(state.source_bufnr)
+    then
+        return true
+    end
+    return false
 end
 
 function M.open_chat()
@@ -55,6 +70,10 @@ function M.open_chat()
         )
         return
     end
+
+    -- Store source buffer before creating chat
+    state.source_bufnr = vim.api.nvim_get_current_buf()
+    update_context()
 
     -- If window exists and is valid, just focus it
     if state.win_id and vim.api.nvim_win_is_valid(state.win_id) then
@@ -75,10 +94,6 @@ function M.open_chat()
         vim.cmd("startinsert")
         return
     end
-
-    -- Store source buffer before creating chat
-    state.source_bufnr = vim.api.nvim_get_current_buf()
-    update_context()
 
     -- Create buffer first
     state.bufnr = vim.api.nvim_create_buf(false, true)
@@ -176,16 +191,58 @@ function M.setup_keybinds()
         return "<CR>"
     end, { buffer = state.bufnr, expr = true })
 
-    -- Map ESC to close chat window in terminal mode
-    vim.keymap.set(
-        "t",
-        "<Esc>",
-        "<C-\\><C-n>:KiroChat<CR>",
-        {
-            noremap = true,
-            silent = true,
-        }
+    -- Map ESC to enter normal mode in terminal mode
+    vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", {
+        buffer = state.bufnr,
+        noremap = true,
+        silent = true,
+    })
+end
+
+function M.add_current_file_to_context()
+    if not M.is_chat_open() then
+        vim.notify(
+            "kiro-cli is not open, use the :KiroChat command to open it first",
+            vim.log.levels.ERROR
+        )
+        return
+    end
+
+    local file_path = vim.api.nvim_buf_get_name(0)
+    vim.fn.chansend(
+        state.chan_id,
+        "/context add " .. file_path .. "\r"
     )
+    M.open_chat()
+end
+
+function M.add_selection_to_context()
+    if not M.is_chat_open() then
+        vim.notify(
+            "kiro-cli is not open, use the :KiroChat command to open it first",
+            vim.log.levels.ERROR
+        )
+        return
+    end
+
+    local start_pos = vim.fn.getpos("'<")
+    local end_pos = vim.fn.getpos("'>")
+    local lines = vim.fn.getregion(start_pos, end_pos)
+    if #lines == 0 then
+        vim.notify(
+            "You must select something first, to add it as context to kiro-cli...",
+            vim.log.levels.ERROR
+        )
+        return
+    end
+    local selection = table.concat(lines, "\n")
+
+    M.add_current_file_to_context()
+    vim.fn.chansend(
+        state.chan_id,
+        "\n```\n" .. selection .. "\n```\n\n"
+    )
+    M.open_chat()
 end
 
 return M

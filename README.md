@@ -91,6 +91,8 @@ Or with [config options](#configuration)
 | Command | Description |
 |---------|-------------|
 | `:KiroChat` | Toggle the Kiro chat window (open/close) |
+| `:KiroAddFileToContext` | Add the current file to the chat context |
+| `:KiroAddSelectionToContext` | Add the selected text to the chat context (visual mode) |
 
 ---
 <br>
@@ -103,14 +105,14 @@ These keybindings are active **only** in the Kiro chat buffer:
 
 | Mode | Key | Action | Notes |
 |------|-----|--------|-------|
-| Terminal | `<Esc>` | Hide chat window | Returns to previous buffer |
+| Terminal | `<Esc>` | Enter normal mode | Standard terminal behavior |
 | Terminal | `<C-q>` | Hide chat window | Configurable via `close_keymap` |
-| Normal | `q` | Close chat window | Must exit terminal mode first (`<C-\><C-n>`) |
+| Normal | `q` | Close chat window | Press `<Esc>` first to enter normal mode |
 
 ### Exiting Terminal Mode
 
 To use normal mode keybindings in the chat window:
-1. Press `<C-\>` then `<C-n>` to exit terminal insert mode
+1. Press `<Esc>` to exit terminal insert mode
 2. Now you can use `q` to close the window
 
 Or use `<C-q>` directly from terminal mode (default binding).
@@ -137,7 +139,7 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
     debug = false,
 
     -- Window type: 'split' or 'float'
-    window_type = 'split',
+    window_type = 'float',
 
     -- Enable automatic file reload handling
     reload = true,
@@ -152,7 +154,7 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `debug` | boolean | `false` | Print debug logs for events and actions |
-| `window_type` | string | `'split'` | Window type: `'split'` (vertical split) or `'float'` (floating window) |
+| `window_type` | string | `'float'` | Window type: `'split'` (vertical split) or `'float'` (floating window) |
 | `reload` | boolean | `true` | Enable automatic file reload with conflict detection |
 | `close_keymap` | string | `'<C-q>'` | Terminal mode keybinding to close chat window |
 

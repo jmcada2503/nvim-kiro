@@ -11,7 +11,7 @@ M.options = {
     -- Prints useful logs about what event are triggered, and reasons actions are executed.
     debug = false,
     -- What type of window to open the map in.
-    window_type = "split",
+    window_type = "float",
     -- Toggle reload module
     reload = true,
     -- Set keybinding to hide the chat window (Use special keys as this will run when the terminal is open)
