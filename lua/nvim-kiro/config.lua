@@ -1,13 +1,13 @@
 local log = require("nvim-kiro.util.log")
 
-local NvimKiroPlugin = {}
+local M = {}
 
 --- NvimKiroPlugin configuration with its default values.
 ---
 ---@type table
 --- Default values:
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
-NvimKiroPlugin.options = {
+M.options = {
     -- Prints useful logs about what event are triggered, and reasons actions are executed.
     debug = false,
     -- What type of window to open the map in.
@@ -19,40 +19,36 @@ NvimKiroPlugin.options = {
 }
 
 ---@private
-local defaults = vim.deepcopy(NvimKiroPlugin.options)
+local defaults = vim.deepcopy(M.options)
 
 --- Defaults NvimKiroPlugin options by merging user provided options with the default plugin values.
 ---
----@param options table Module config table. See |NvimKiroPlugin.options|.
+---@param options table Module config table.
 ---
 ---@private
-function NvimKiroPlugin.defaults(options)
-    NvimKiroPlugin.options =
+function M.defaults(options)
+    M.options =
         vim.deepcopy(vim.tbl_deep_extend("keep", options or {}, defaults or {}))
 
     -- let your user know that they provided a wrong value, this is reported when your plugin is executed.
     assert(
-        type(NvimKiroPlugin.options.debug) == "boolean",
+        type(M.options.debug) == "boolean",
         "`debug` must be a boolean (`true` or `false`)."
     )
 
-    return NvimKiroPlugin.options
+    return M.options
 end
 
 --- Define your nvim-kiro setup.
 ---
----@param options table Module config table. See |NvimKiroPlugin.options|.
----
----@usage `require("nvim-kiro").setup()` (add `{}` with your |NvimKiroPlugin.options| table)
-function NvimKiroPlugin.setup(options)
-    NvimKiroPlugin.options = NvimKiroPlugin.defaults(options or {})
+---@param options table Module config table..
+function M.setup(options)
+    M.options = M.defaults(options or {})
 
-    log.warn_deprecation(NvimKiroPlugin.options)
-
-    if NvimKiroPlugin.options.reload then
+    if M.options.reload then
         require("nvim-kiro.reload").setup()
     end
-    return NvimKiroPlugin.options
+    return M.options
 end
 
-return NvimKiroPlugin
+return M
