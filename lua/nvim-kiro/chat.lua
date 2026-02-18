@@ -9,7 +9,7 @@ local state = {
     last_input = "",
 }
 
-local config = require("nvim-kiro").config
+local config = _G.NvimKiroPlugin.config
 
 local function get_window_config()
     if config.window_type == "float" then
@@ -175,6 +175,17 @@ function M.setup_keybinds()
         state.last_input = "" -- Reset for next input
         return "<CR>"
     end, { buffer = state.bufnr, expr = true })
+
+    -- Map ESC to close chat window in terminal mode
+    vim.keymap.set(
+        "t",
+        "<Esc>",
+        "<C-\\><C-n>:KiroChat<CR>",
+        {
+            noremap = true,
+            silent = true,
+        }
+    )
 end
 
 return M
