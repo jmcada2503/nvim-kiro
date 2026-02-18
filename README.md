@@ -11,6 +11,7 @@
 ## Table of Contents
 
 * [Overview](#overview)
+* [Requirements](#requirements)
 * [Commands](#commands)
 * [Keybindings](#keybindings)
 * [Configuration](#configuration)
@@ -29,6 +30,23 @@ nvim-kiro is a Neovim plugin that integrates kiro-cli chat functionality directl
 - Automatic context injection (file path, line number, project root)
 - Smart file reload handling with conflict detection
 - Minimal configuration with sensible defaults
+
+---
+<br>
+
+## Requirements
+
+- **Neovim** 0.8.0 or later
+- **kiro-cli** must be installed and available in your PATH
+
+### Installing kiro-cli
+
+For installation instructions, see the [kiro-cli installation guide](https://github.com/aws/kiro-cli#installation).
+
+To verify kiro-cli is installed:
+```bash
+which kiro-cli
+```
 
 ---
 <br>
