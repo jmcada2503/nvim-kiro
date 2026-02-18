@@ -2,131 +2,147 @@
   <h1 align="center">nvim-kiro</h2>
 </p>
 
-<p align="center">
-    > A Neovim plugin that integrates kiro-cli chat functionality directly into your editor with automatic "context passing"
+<p align="center" style="color:gray">
+    A Neovim plugin that integrates kiro-cli chat functionality directly into your editor with automatic "context passing"
 
 </p>
+<br>
+
+## Table of Contents
+
+* [Overview](#overview)
+* [Commands](#commands)
+* [Keybindings](#keybindings)
+* [Configuration](#configuration)
+* [Troubleshooting](#troubleshooting)
+* [Additional Resources](#additional-resources)
+
+---
+<br>
 
 ## Overview
 
-- Simple, fun project to learn neovim plugins and improve my workflow
-- Assumes working `kiro-cli` tool. Simply integrates your working cli tool with neovim.
+nvim-kiro is a Neovim plugin that integrates kiro-cli chat functionality directly into your editor with automatic context passing. It provides a seamless way to interact with Kiro AI while maintaining awareness of your current file, line number, and project context.
 
-### Roadmap
+**Key Features:**
+- Terminal-based chat interface (split or floating window)
+- Automatic context injection (file path, line number, project root)
+- Smart file reload handling with conflict detection
+- Minimal configuration with sensible defaults
 
-- [ ] Auto-completion integration
-- [ ] Custom context formatters
-- [ ] Configurable keybindings + options
-- [ ] Reload
-    - **No unsaved changes**: File reloads automatically
-    - **Unsaved changes**: You get a prompt with options:
-    - `[L]oad` - Discard your changes, load kiro's version
-    - `[O]K` - Keep your changes, ignore kiro's version
-    - `[D]iff` - Open a diff view to manually merge changes
+---
+<br>
 
-## Installation
+## Commands
 
-### Requirements
+### User Commands
 
-- Neovim >= 0.8.0
-- [kiro-cli](https://github.com/aws/kiro-cli) installed and available in PATH
+| Command | Description |
+|---------|-------------|
+| `:KiroChat` | Toggle the Kiro chat window (open/close) |
 
-<div align="center">
-<table>
-<thead>
-<tr>
-<th>Package manager</th>
-<th>Snippet</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
+---
+<br>
 
-Development
-</td>
-<td>
+## Keybindings
 
-```lua
-{
-    dir = 'path/to/nvim-kiro-plugin',
-    dev = true,
-    opts = {}
-}
-```
+### Chat Window Keybindings
 
-</td>
-</tr>
-<tr>
-<td>
+These keybindings are active **only** in the Kiro chat buffer:
 
-[wbthomason/packer.nvim](https://github.com/wbthomason/packer.nvim)
+| Mode | Key | Action | Notes |
+|------|-----|--------|-------|
+| Terminal | `<C-q>` | Close chat window | Configurable via `close_keymap` |
+| Normal | `q` | Close chat window | Must exit terminal mode first (`<C-\><C-n>`) |
 
-</td>
-<td>
+### Exiting Terminal Mode
+
+To use normal mode keybindings in the chat window:
+1. Press `<C-\>` then `<C-n>` to exit terminal insert mode
+2. Now you can use `q` to close the window
+
+Or use `<C-q>` directly from terminal mode (default binding).
+
+### Global Keybindings
+
+No global keybindings are set by default. Users can add their own:
 
 ```lua
--- stable version
-use {"nvim-kiro", tag = "*" }
--- dev version
-use {"nvim-kiro"}
+-- Example: Add global keybinding to toggle chat
+vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' })
 ```
 
-</td>
-</tr>
-<tr>
-<td>
-
-[junegunn/vim-plug](https://github.com/junegunn/vim-plug)
-
-</td>
-<td>
-
-```lua
--- stable version
-Plug "nvim-kiro", { "tag": "*" }
--- dev version
-Plug "nvim-kiro"
-```
-
-</td>
-</tr>
-<tr>
-<td>
-
-[folke/lazy.nvim](https://github.com/folke/lazy.nvim)
-
-</td>
-<td>
-
-```lua
--- stable version
-require("lazy").setup({{"nvim-kiro", version = "*"}})
--- dev version
-require("lazy").setup({"nvim-kiro"})
-```
-
-</td>
-</tr>
-</tbody>
-</table>
-</div>
+---
+<br>
 
 ## Configuration
 
-<details>
-<summary>Click to unfold the full list of options with their default values</summary>
-
-> **Note**: The options are also available in Neovim by calling `:h nvim-kiro.options`
+### Default Configuration
 
 ```lua
-require("nvim-kiro").setup({
-    -- you can copy the full list from lua/nvim-kiro/config.lua
-})
+{
+    -- Enable debug logging
+    debug = false,
+
+    -- Window type: 'split' or 'float'
+    window_type = 'split',
+
+    -- Enable automatic file reload handling
+    reload = true,
+
+    -- Keybinding to close chat from terminal mode
+    close_keymap = '<C-q>'
+}
 ```
 
-</details>
+### Configuration Options
 
-## ⌨ Contributing
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `debug` | boolean | `false` | Print debug logs for events and actions |
+| `window_type` | string | `'split'` | Window type: `'split'` (vertical split) or `'float'` (floating window) |
+| `reload` | boolean | `true` | Enable automatic file reload with conflict detection |
+| `close_keymap` | string | `'<C-q>'` | Terminal mode keybinding to close chat window |
 
-PRs and issues are always welcome. Make sure to provide as much context as possible when opening one.
+---
+<br>
+
+## Troubleshooting
+
+### Common Issues
+
+**Chat window doesn't open:**
+- Verify `kiro-cli` is installed: `which kiro-cli`
+- Check debug logs: `require('nvim-kiro').setup({ debug = true })`
+
+**Context not being sent:**
+- Ensure you're in a file buffer (not unnamed or special buffer)
+- Check that source buffer is valid when chat opens
+
+**File reload not working:**
+- Verify `reload = true` in config
+- Check that `autoread` is set: `:set autoread?`
+
+**Keybindings not working:**
+- Ensure you're in the correct mode (terminal vs normal)
+- Use `<C-\><C-n>` to exit terminal mode before using normal mode bindings
+
+---
+<br>
+
+## Additional Resources
+
+- [Neovim Lua Guide](https://neovim.io/doc/user/lua-guide.html)
+- [kiro-cli Documentation](https://github.com/aws/kiro-cli)
+
+---
+<br>
+
+> **Questions or Issues?**
+> 
+> Open an issue on GitHub with:
+> - Neovim version (`:version`)
+> - Plugin configuration
+> - Steps to reproduce
+> - Debug logs (if applicable)
+
