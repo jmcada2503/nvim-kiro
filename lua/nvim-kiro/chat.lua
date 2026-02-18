@@ -9,9 +9,9 @@ local state = {
     last_input = "",
 }
 
-local function get_window_config()
-    local config = require("nvim-kiro").config
+local config = require("nvim-kiro").config
 
+local function get_window_config()
     if config.window_type == "float" then
         local ui = vim.api.nvim_list_uis()[1]
         local width = math.floor(ui.width * 0.8)
@@ -132,6 +132,12 @@ function M.setup_keybinds()
     if not state.bufnr then
         return
     end
+
+    -- Add custom keymap to close in terminal mode
+    vim.api.nvim_buf_set_keymap(state.bufnr, "t", config.close_keymap, "<C-\\><C-n>:KiroChat<CR>", {
+        noremap = true,
+        silent = true,
+    })
 
     -- Add q to close in normal mode
     vim.api.nvim_buf_set_keymap(state.bufnr, "n", "q", "", {

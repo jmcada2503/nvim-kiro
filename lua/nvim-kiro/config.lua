@@ -14,6 +14,8 @@ NvimKiroPlugin.options = {
     window_type = "split",
     -- Toggle reload module
     reload = true,
+    -- Set keybinding to hide the chat window (Use special keys as this will run when the terminal is open)
+    close_keymap = "<C-q>",
 }
 
 ---@private
