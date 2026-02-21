@@ -46,7 +46,7 @@ function M.setup(options)
     M.options = M.defaults(options or {})
 
     if M.options.reload then
-        require("nvim-kiro.reload").setup()
+        require("nvim-kiro.chat.reload").setup()
     end
     return M.options
 end
