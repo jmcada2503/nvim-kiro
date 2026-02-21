@@ -7,7 +7,7 @@ function M.setup(opts)
     _G.NvimKiroPlugin = _G.NvimKiroPlugin or {}
     _G.NvimKiroPlugin.config = conf.setup(opts)
 
-    local chat = require("nvim-kiro.chat")
+    local chat = require("nvim-kiro.chat.chat")
 
     -- setup plugin commands
     vim.api.nvim_create_user_command("KiroChat", function()

@@ -92,7 +92,7 @@ function M.initialize_kiro_cli()
     vim.api.nvim_set_current_buf(state.bufnr)
 
     -- Start terminal in the buffer
-    state.chan_id = vim.fn.termopen("bash -c 'kiro-cli chat'", {
+    state.chan_id = vim.fn.termopen("kiro-cli chat", {
         on_exit = function()
             state.bufnr = nil
             state.chan_id = nil
@@ -228,7 +228,7 @@ function M.setup_keybinds()
         local trimmed = state.last_input:match("^%s*(.-)%s*$")
 
         -- Skip context for: commands starting with /, or single char responses (y/n/t)
-        local skip_context = trimmed:match("^/") or trimmed:match("^[ynt]$")
+        local skip_context = trimmed:match("^/") or trimmed:match("^[ynt]$") or trimmed:match("^!")
 
         if state.last_context and state.chan_id and not skip_context then
             vim.fn.chansend(state.chan_id, state.last_context .. "\n")
