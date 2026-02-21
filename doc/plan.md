@@ -4,14 +4,17 @@
 Create a Neovim plugin that integrates kiro-cli chat functionality with automatic context passing (filename, line number, root directory) and handles concurrent file editing without sync conflicts.
 
 **Requirements:**
-1. Toggleable chat interface (split window with text buffer, configurable to floating)
-2. Automatic context injection on every message (filename, line#, root directory)
-3. Non-blocking file editing with smart reload handling:
-   - Auto-reload if no unsaved changes
-   - Prompt with options (Load/OK/Diff) if unsaved changes exist
-4. Simple configuration with sensible defaults, room for expansion
-5. Local development testing via plugin manager dev mode
-6. Enter key sends messages (future: Shift+Enter for newlines)
+1. [x] Toggleable chat interface (split window with text buffer, configurable to floating)
+2. [x] Automatic context injection on every message (filename, line#, root directory)
+3. [x] Non-blocking file editing with smart reload handling:
+   [x] - Auto-reload if no unsaved changes
+   [x] - Prompt with options (Load/OK/Diff) if unsaved changes exist
+4. [x] Simple configuration with sensible defaults, room for expansion
+5. [x] Enter key sends messages (Ctrl+j for newlines)
+6. [ ] Inject selected content as context to the chat
+   [ ] - Inject selected content always before the user prompt (even when the user promp is already written)
+7. [x] Inject current file as context to the chat
+8. [ ] Command to generate a commit message
 
 **Background:**
 
@@ -23,20 +26,11 @@ Based on research of amazonq.nvim and Neovim plugin patterns:
 - The `autoread` option combined with `checktime` enables automatic reloading
 - Plugin managers like lazy.nvim support `dev = true` for local development
 
-**Proposed Solution:**
-
-Create a minimal Neovim plugin with:
-1. **Core module** (`lua/nvim-kiro/init.lua`) - Setup function and configuration
-2. **Chat module** (`lua/nvim-kiro/chat.lua`) - Terminal buffer management and kiro-cli interaction
-3. **Context module** (`lua/nvim-kiro/context.lua`) - Extract and format file context
-4. **Reload module** (`lua/nvim-kiro/reload.lua`) - Handle external file changes with conflict detection
-5. **Plugin entry** (`plugin/nvim-kiro.vim`) - Register commands and keybinds
-
 Architecture:
 - Use terminal buffer running `kiro-cli chat` in interactive mode
 - Intercept Enter key in terminal insert mode to prepend context before sending
 - Set up autocmds for `FileChangedShell` to handle kiro-cli's file modifications
-- Use split window by default (configurable to float in future iterations)
+- Use float window by default (configurable to split)
 
 **Task Breakdown:**
 
