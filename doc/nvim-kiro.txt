@@ -1,0 +1,148 @@
+*nvim-kiro.txt*  Neovim plugin for kiro-cli chat integration
+
+==============================================================================
+CONTENTS                                                    *nvim-kiro-contents*
+
+    1. Introduction ............................ |nvim-kiro-introduction|
+    2. Requirements ............................ |nvim-kiro-requirements|
+    3. Setup ................................... |nvim-kiro-setup|
+    4. Commands ................................ |nvim-kiro-commands|
+    5. Configuration ........................... |nvim-kiro-configuration|
+    6. Keybindings ............................. |nvim-kiro-keybindings|
+
+==============================================================================
+INTRODUCTION                                            *nvim-kiro-introduction*
+
+nvim-kiro is a Neovim plugin that integrates kiro-cli chat functionality
+directly into your editor with automatic context passing. It provides a
+seamless way to interact with Kiro AI while maintaining awareness of your
+current file, line number, and project context.
+
+Key Features:
+  • Terminal-based chat interface (split or floating window)
+  • Automatic context injection (file path, line number, project root)
+  • Smart file reload handling with conflict detection
+  • Minimal configuration with sensible defaults
+
+==============================================================================
+REQUIREMENTS                                            *nvim-kiro-requirements*
+
+  • Neovim 0.8.0 or later
+  • kiro-cli must be installed and available in your PATH
+
+To verify kiro-cli is installed: >
+    which kiro-cli
+<
+
+==============================================================================
+SETUP                                                          *nvim-kiro-setup*
+
+                                                              *nvim-kiro.setup()*
+nvim-kiro.setup({opts})
+    Initialize the plugin with optional configuration.
+
+    Parameters: ~
+        {opts} (table|nil) Configuration options. See |nvim-kiro-configuration|
+
+    Usage: ~
+>lua
+        require('nvim-kiro').setup()
+<
+    Or with custom options: >lua
+        require('nvim-kiro').setup({
+            debug = false,
+            window_type = 'float',
+            reload = true,
+            close_keymap = '<C-q>'
+        })
+<
+
+==============================================================================
+COMMANDS                                                    *nvim-kiro-commands*
+
+                                                                    *:KiroChat*
+:KiroChat
+    Toggle the Kiro chat window (open/close). When opening, automatically
+    captures context from the current buffer including file path, line
+    number, and project root.
+
+                                                       *:KiroAddFileToContext*
+:KiroAddFileToContext
+    Add the current file to the chat context. Opens the chat window if not
+    already open and sends the file path to kiro-cli.
+
+                                                  *:KiroAddSelectionToContext*
+:KiroAddSelectionToContext
+    Add the selected text to the chat context. Must be used in visual mode.
+    Opens the chat window if not already open and sends the selection as a
+    code block to kiro-cli.
+
+                                                              *:KiroAgentSwap*
+:KiroAgentSwap
+    Open the agent selection menu in kiro-cli. Allows switching between
+    different AI agents.
+
+==============================================================================
+CONFIGURATION                                          *nvim-kiro-configuration*
+
+                                                              *nvim-kiro-config*
+Configuration options for nvim-kiro:
+
+    debug                                                  *nvim-kiro.config.debug*
+        Type: boolean
+        Default: `false`
+        
+        Enable debug logging for events and actions.
+
+    window_type                                      *nvim-kiro.config.window_type*
+        Type: string
+        Default: `'float'`
+        
+        Window type for the chat interface:
+          • 'float' - Floating window (centered, 80% of screen)
+          • 'split' - Vertical split window
+
+    reload                                                *nvim-kiro.config.reload*
+        Type: boolean
+        Default: `true`
+        
+        Enable automatic file reload handling with conflict detection.
+
+    close_keymap                                    *nvim-kiro.config.close_keymap*
+        Type: string
+        Default: `'<C-q>'`
+        
+        Terminal mode keybinding to close the chat window.
+
+==============================================================================
+KEYBINDINGS                                              *nvim-kiro-keybindings*
+
+Chat Window Keybindings ~
+
+These keybindings are active only in the Kiro chat buffer:
+
+Terminal Mode:
+    <CR>        Send message (automatically includes context)
+    <C-j>       Insert newline (for multi-line messages)
+    <Esc>       Enter normal mode
+    <C-q>       Hide chat window (configurable via close_keymap)
+
+Normal Mode:
+    q           Close chat window
+    <Esc>       Close chat window
+
+Quick Close:
+    Press <Esc> twice to close the chat window:
+      • First <Esc> enters normal mode
+      • Second <Esc> closes the window
+
+Global Keybindings ~
+
+No global keybindings are set by default. Users can add their own: >lua
+    -- Example: Add global keybinding to toggle chat
+    vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', 
+        { desc = 'Toggle Kiro Chat' })
+<
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
