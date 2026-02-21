@@ -94,6 +94,19 @@ Or with [config options](#configuration)
 | `:KiroAddFileToContext` | Add the current file to the chat context |
 | `:KiroAddSelectionToContext` | Add the selected text to the chat context (visual mode) |
 
+### Help Documentation
+
+Access detailed help documentation within Neovim:
+```vim
+:help nvim-kiro
+```
+
+Or jump directly to specific topics:
+- `:help :KiroChat` - Chat command documentation
+- `:help nvim-kiro.setup()` - Setup function details
+- `:help nvim-kiro-config` - Configuration options
+- `:help nvim-kiro-keybindings` - Keybinding reference
+
 ---
 <br>
 
@@ -105,6 +118,8 @@ These keybindings are active **only** in the Kiro chat buffer:
 
 | Mode | Key | Action | Notes |
 |------|-----|--------|-------|
+| Terminal | `<CR>` (Enter) | Send message | Automatically includes context |
+| Terminal | `<C-j>` | Insert newline | For multi-line messages |
 | Terminal | `<Esc>` | Enter normal mode | Standard terminal behavior |
 | Terminal | `<C-q>` | Hide chat window | Configurable via `close_keymap` |
 | Normal | `q` | Close chat window | Press `<Esc>` first to enter normal mode |
@@ -114,6 +129,10 @@ These keybindings are active **only** in the Kiro chat buffer:
 To use normal mode keybindings in the chat window:
 1. Press `<Esc>` to exit terminal insert mode
 2. Now you can use `q` to close the window
+
+**Quick Close:** Press `<Esc>` twice to close the chat window:
+- First `<Esc>` enters normal mode
+- Second `<Esc>` closes the window
 
 Or use `<C-q>` directly from terminal mode (default binding).
 
