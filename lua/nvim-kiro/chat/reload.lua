@@ -36,13 +36,13 @@ end
 
 function M.prompt_conflict_resolution(bufnr)
     local choice =
-        vim.fn.confirm("File changed on disk. You have unsaved changes.", "&Load\n&OK\n&Diff", 2)
+        vim.fn.confirm("File changed on disk. You have unsaved changes. Do you want to load the new version?", "&Yes\n&No\n&Diff", 2)
 
     if choice == 1 then
-        -- Load - discard local changes
+        -- Yes - discard local changes
         vim.cmd("edit!")
     elseif choice == 2 then
-        -- OK - keep local changes
+        -- No - keep local changes
         vim.v.fcs_choice = ""
     elseif choice == 3 then
         -- Diff - open diff view

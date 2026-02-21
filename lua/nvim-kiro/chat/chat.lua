@@ -10,9 +10,6 @@ _G.NvimKiroPlugin.state = {
     last_input = "",
 }
 local state = _G.NvimKiroPlugin.state
-
-print("test: ", _G.NvimKiroPlugin)
-
 local config = _G.NvimKiroPlugin.config
 
 local function get_window_config()
@@ -54,12 +51,61 @@ end
 function M.is_chat_open()
     if
         state.chan_id
-        and state.source_bufnr
-        and vim.api.nvim_buf_is_valid(state.source_bufnr)
+        and state.bufnr
+        and vim.api.nvim_buf_is_valid(state.bufnr)
     then
         return true
     end
     return false
+end
+
+function M.initialize_kiro_cli()
+    if vim.fn.executable("kiro-cli") == 0 then
+        vim.notify(
+            "kiro-cli not found in PATH. Please install kiro-cli first.",
+            vim.log.levels.ERROR
+        )
+        return
+    end
+
+    -- If buffer exists don't create a new one
+    if state.bufnr and vim.api.nvim_buf_is_valid(state.bufnr) then
+        return
+    end
+
+    -- Save current buffer before creating new one
+    local current_buf = vim.api.nvim_get_current_buf()
+
+    -- Create buffer first
+    state.bufnr = vim.api.nvim_create_buf(false, true)
+
+    -- Set buffer options
+    vim.bo[state.bufnr].bufhidden = "hide"
+    vim.bo[state.bufnr].buflisted = false
+
+    -- If terminal exists don't create a new one
+    if state.chan_id then
+        return
+    end
+
+    -- Switch to target buffer to open terminal in it
+    vim.api.nvim_set_current_buf(state.bufnr)
+
+    -- Start terminal in the buffer
+    state.chan_id = vim.fn.termopen("bash -c 'kiro-cli chat'", {
+        on_exit = function()
+            state.bufnr = nil
+            state.chan_id = nil
+            state.win_id = nil
+        end
+    })
+
+    M.setup_keybinds()
+
+    -- Switch back to original buffer
+    if vim.api.nvim_buf_is_valid(current_buf) then
+        vim.api.nvim_set_current_buf(current_buf)
+    end
 end
 
 function M.open_chat()
@@ -197,6 +243,13 @@ function M.setup_keybinds()
         noremap = true,
         silent = true,
     })
+
+    -- Map ESC to close in normal mode
+    vim.keymap.set("n", "<Esc>", ":KiroChat<CR>", {
+        buffer = state.bufnr,
+        noremap = true,
+        silent = true,
+    })
 end
 
 function M.add_current_file_to_context()
@@ -213,6 +266,7 @@ function M.add_current_file_to_context()
         state.chan_id,
         "/context add " .. file_path .. "\r"
     )
+    update_context()
     M.open_chat()
 end
 
@@ -241,6 +295,24 @@ function M.add_selection_to_context()
     vim.fn.chansend(
         state.chan_id,
         "\n```\n" .. selection .. "\n```\n\n"
+    )
+    update_context()
+    M.open_chat()
+end
+
+function M.select_agent()
+    if not M.is_chat_open() then
+        vim.notify(
+            "kiro-cli is not open, use the :KiroChat command to open it first",
+            vim.log.levels.ERROR
+        )
+        return
+    end
+
+    M.add_current_file_to_context()
+    vim.fn.chansend(
+        state.chan_id,
+        "/agent swap\r"
     )
     M.open_chat()
 end
