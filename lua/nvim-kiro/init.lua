@@ -19,6 +19,13 @@ function M.setup(opts)
     vim.api.nvim_create_user_command("KiroAddSelectionToContext", function()
         chat.add_selection_to_context()
     end, {range=true})
+    vim.api.nvim_create_user_command("KiroAgentSwap", function()
+        chat.select_agent()
+    end, {})
+
+    vim.defer_fn(function()
+        chat.initialize_kiro_cli()
+    end, 100)
 end
 
 return M
