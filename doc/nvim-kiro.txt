@@ -128,7 +128,6 @@ Terminal Mode:
     <C-q>       Hide chat window (configurable via close_keymap)
 
 Normal Mode:
-    q           Close chat window
     <Esc>       Close chat window
 
 Quick Close:

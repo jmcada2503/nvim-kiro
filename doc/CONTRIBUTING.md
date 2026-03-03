@@ -7,17 +7,22 @@ nvim-kiro/
 ├── lua/nvim-kiro/           # Core plugin logic
 │   ├── init.lua             # Main entry point, setup function
 │   ├── config.lua           # Configuration management
-│   ├── main.lua             # Enable/disable/toggle logic
 │   ├── state.lua            # Global state management
-│   ├── chat.lua             # Chat buffer and terminal management
-│   ├── context.lua          # Context extraction utilities
-│   ├── reload.lua           # File change detection and reload
-│   └── util/
+│   ├── chat/                # Chat module
+│   │   ├── init.lua         # Chat module entry point
+│   │   ├── interface.lua    # Terminal buffer and window management
+│   │   ├── keybindings.lua  # Chat window keybindings
+│   │   ├── context.lua      # Context extraction utilities
+│   │   ├── actions.lua      # Chat actions (add file/selection, agent swap)
+│   │   ├── utils.lua        # Chat utility functions
+│   │   └── reload.lua       # File change detection and reload
+│   └── utils/
 │       └── log.lua          # Logging utilities
 ├── plugin/
 │   └── nvim-kiro.lua        # Plugin initialization, commands
 ├── doc/
-│   ├── nvim-kiro-plugin.txt # Vim help documentation
+│   ├── nvim-kiro.txt        # Vim help documentation
+│   ├── CONTRIBUTING.md      # Development guide
 │   └── plan.md              # Original implementation plan
 ├── tests/
 │   ├── test_API.lua         # API tests
@@ -35,13 +40,16 @@ nvim-kiro/
 | Module | Purpose |
 |--------|---------|
 | `init.lua` | Public API (`setup()`, `toggle()`, `enable()`, `disable()`) |
-| `config.lua` | Configuration defaults and validation |
-| `main.lua` | Internal enable/disable logic |
-| `state.lua` | Global plugin state (enabled/disabled) |
-| `chat.lua` | Terminal buffer creation, keybindings, context injection |
-| `context.lua` | Extract file/line/root context from current buffer |
-| `reload.lua` | Handle external file changes with conflict resolution |
-| `util/log.lua` | Debug logging and deprecation warnings |
+| `config.lua` | Configuration defaults, validation, and window config |
+| `state.lua` | Global plugin state (chat, source buffer, context) |
+| `chat/init.lua` | Chat module entry point and orchestration |
+| `chat/interface.lua` | Terminal buffer creation and window management |
+| `chat/keybindings.lua` | Chat window keybindings and input tracking |
+| `chat/context.lua` | Extract file/line/root context from buffers |
+| `chat/actions.lua` | Chat actions (add file/selection, agent swap) |
+| `chat/utils.lua` | Chat utility functions |
+| `chat/reload.lua` | Handle external file changes with conflict resolution |
+| `utils/log.lua` | Debug logging and deprecation warnings |
 
 ---
 <br>
@@ -53,13 +61,13 @@ nvim-kiro/
 ```
 User opens chat (:KiroChat)
     ↓
-chat.lua creates terminal buffer
+chat/interface.lua creates terminal buffer
     ↓
 Runs `kiro-cli chat` in terminal
     ↓
 User types message and presses Enter
     ↓
-Intercept Enter key → get context from source buffer
+chat/keybindings.lua intercepts Enter → chat/context.lua gets context
     ↓
 Send context + message to kiro-cli via chansend()
     ↓
@@ -76,7 +84,9 @@ The plugin tracks the **source buffer** (the file you were editing when you open
 
 Context is sent **before** the user's message when Enter is pressed, but skipped for:
 - Commands starting with `/` (e.g., `/quit`)
+- Commands starting with `!` (e.g., `!ls`)
 - Single character responses (e.g., `y`, `n`, `t`)
+- Empty responses
 
 ### File Reload Logic
 

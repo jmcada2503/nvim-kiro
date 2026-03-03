@@ -11,10 +11,9 @@ Create a Neovim plugin that integrates kiro-cli chat functionality with automati
    [x] - Prompt with options (Load/OK/Diff) if unsaved changes exist
 4. [x] Simple configuration with sensible defaults, room for expansion
 5. [x] Enter key sends messages (Ctrl+j for newlines)
-6. [ ] Inject selected content as context to the chat
-   [ ] - Inject selected content always before the user prompt (even when the user promp is already written)
+6. [x] Inject selected content as context to the chat
 7. [x] Inject current file as context to the chat
-8. [ ] Command to generate a commit message
+8. [x] Command to swap agents
 
 **Background:**
 
@@ -31,6 +30,7 @@ Architecture:
 - Intercept Enter key in terminal insert mode to prepend context before sending
 - Set up autocmds for `FileChangedShell` to handle kiro-cli's file modifications
 - Use float window by default (configurable to split)
+- Modular chat system with separate modules for interface, keybindings, context, actions, and utilities
 
 **Task Breakdown:**
 
@@ -55,7 +55,7 @@ Architecture:
 
 **Task 3: Create chat buffer with kiro-cli terminal**
 - Objective: Open a split window with terminal running kiro-cli chat
-- Create `lua/nvim-kiro/chat.lua`
+- Create `lua/nvim-kiro/chat/init.lua` and `lua/nvim-kiro/chat/interface.lua`
 - Implement `open_chat()` function that:
   - Creates vertical split on right side (`vim.cmd('vsplit')`)
   - Opens terminal buffer with `vim.fn.termopen('kiro-cli chat')`
@@ -67,11 +67,11 @@ Architecture:
 
 **Task 4: Add context injection on message send**
 - Objective: Automatically prepend context when user presses Enter
-- In `chat.lua`, set up terminal buffer keymapping for `<CR>` in insert mode
+- In `chat/keybindings.lua`, set up terminal buffer keymapping for `<CR>` in insert mode
 - On Enter press:
   - Get current line content from chat buffer
-  - Get context from original buffer (not chat buffer)
-  - Format message: `Context: ... \n<user message>`
+  - Get context from original buffer (not chat buffer) via `chat/context.lua`
+  - Format message: `[Context: ...] \n<user message>`
   - Send to kiro-cli via `vim.fn.chansend()`
   - Clear the input line in chat buffer
 - Handle empty messages (don't send)
@@ -79,7 +79,7 @@ Architecture:
 
 **Task 5: Register plugin command and test locally**
 - Objective: Create `:KiroChat` command and test with lazy.nvim dev mode
-- Create `plugin/nvim-kiro.vim` (or `plugin/nvim-kiro.lua`)
+- Create `plugin/nvim-kiro.lua`
 - Register `:KiroChat` command that calls `require('nvim-kiro.chat').toggle_chat()`
 - Add README.md with installation instructions for lazy.nvim:
   ```lua
@@ -89,7 +89,7 @@ Architecture:
 
 **Task 6: Implement smart file reload on external changes**
 - Objective: Auto-reload files modified by kiro-cli, with conflict handling
-- Create `lua/nvim-kiro/reload.lua`
+- Create `lua/nvim-kiro/chat/reload.lua`
 - Set up `FileChangedShell` autocmd that triggers on external file changes
 - Implement logic:
   - If buffer not modified: silently reload with `vim.cmd('checktime')`
