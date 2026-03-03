@@ -122,13 +122,11 @@ These keybindings are active **only** in the Kiro chat buffer:
 | Terminal | `<C-j>` | Insert newline | For multi-line messages |
 | Terminal | `<Esc>` | Enter normal mode | Standard terminal behavior |
 | Terminal | `<C-q>` | Hide chat window | Configurable via `close_keymap` |
-| Normal | `q` | Close chat window | Press `<Esc>` first to enter normal mode |
 
 ### Exiting Terminal Mode
 
 To use normal mode keybindings in the chat window:
 1. Press `<Esc>` to exit terminal insert mode
-2. Now you can use `q` to close the window
 
 **Quick Close:** Press `<Esc>` twice to close the chat window:
 - First `<Esc>` enters normal mode

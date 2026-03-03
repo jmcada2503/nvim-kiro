@@ -1,6 +1,18 @@
-local log = {}
+local M = {}
 
 local longest_scope = 15
+local settings = _G.NvimKiroPlugin.settings
+
+function M.agent_not_installed()
+    M.error(
+        "chat",
+        string.format(
+            "%s not found in PATH. Please install %s first.",
+            settings.cli_agent.binnary,
+            settings.cli_agent.binnary
+        )
+    )
+end
 
 --- prints only if debug is true.
 ---
@@ -8,8 +20,18 @@ local longest_scope = 15
 ---@param str string: the formatted string.
 ---@param ... any: the arguments of the formatted string.
 ---@private
-function log.debug(scope, str, ...)
-    return log.notify(scope, vim.log.levels.DEBUG, false, str, ...)
+function M.debug(scope, str, ...)
+    return M.notify(scope, vim.log.levels.DEBUG, false, str, ...)
+end
+
+--- prints out errors.
+---
+---@param scope string: the scope from where this function is called.
+---@param str string: the formatted error string.
+---@param ... any: the arguments of the formatted string.
+---@private
+function M.error(scope, str, ...)
+    return M.notify(scope, vim.log.levels.ERROR, true, str, ...)
 end
 
 --- prints only if debug is true.
@@ -20,7 +42,7 @@ end
 ---@param str string: the formatted string.
 ---@param ... any: the arguments of the formatted string.
 ---@private
-function log.notify(scope, level, verbose, str, ...)
+function M.notify(scope, level, verbose, str, ...)
     if not verbose and _G.NvimKiroPlugin.config ~= nil and not _G.NvimKiroPlugin.config.debug then
         return
     end
@@ -48,7 +70,7 @@ end
 ---
 ---@param options table: the options provided by the user.
 ---@private
-function log.warn_deprecation(options)
+function M.warn_deprecation(options)
     local uses_deprecated_option = false
     local notice = "is now deprecated, use `%s` instead."
     local root_deprecated = {
@@ -59,7 +81,7 @@ function log.warn_deprecation(options)
     for name, warning in pairs(root_deprecated) do
         if options[name] ~= nil then
             uses_deprecated_option = true
-            log.notify(
+            M.notify(
                 "deprecated_options",
                 vim.log.levels.WARN,
                 true,
@@ -69,13 +91,13 @@ function log.warn_deprecation(options)
     end
 
     if uses_deprecated_option then
-        log.notify(
+        M.notify(
             "deprecated_options",
             vim.log.levels.WARN,
             true,
             "sorry to bother you with the breaking changes :("
         )
-        log.notify(
+        M.notify(
             "deprecated_options",
             vim.log.levels.WARN,
             true,
@@ -84,4 +106,4 @@ function log.warn_deprecation(options)
     end
 end
 
-return log
+return M

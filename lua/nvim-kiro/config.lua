@@ -1,6 +1,7 @@
-local log = require("nvim-kiro.util.log")
+local log = require("nvim-kiro.utils.log")
 
 local M = {}
+local settings = _G.NvimKiroPlugin.settings
 
 --- NvimKiroPlugin configuration with its default values.
 ---
@@ -16,6 +17,12 @@ M.options = {
     reload = true,
     -- Set keybinding to hide the chat window (Use special keys as this will run when the terminal is open)
     close_keymap = "<C-q>",
+    cli_agent = {
+        -- Set cli agent binnary name
+        binnary = "kiro-cli",
+        -- Set command that opens the chat interface with cli agent
+        command = "kiro-cli chat"
+    },
 }
 
 ---@private
@@ -39,6 +46,29 @@ function M.defaults(options)
     return M.options
 end
 
+function M.get_window_config()
+    if settings.window_type == "float" then
+        local ui = vim.api.nvim_list_uis()[1]
+        local width = math.floor(ui.width * 0.8)
+        local height = math.floor(ui.height * 0.8)
+
+        return {
+            relative = "editor",
+            width = width,
+            height = height,
+            row = math.floor((ui.height - height) / 2),
+            col = math.floor((ui.width - width) / 2),
+            style = "minimal",
+            border = "rounded",
+            title = " Kiro Chat ",
+            title_pos = "center",
+        }
+    end
+
+    return nil -- Use split
+end
+
+
 --- Define your nvim-kiro setup.
 ---
 ---@param options table Module config table..
@@ -48,6 +78,8 @@ function M.setup(options)
     if M.options.reload then
         require("nvim-kiro.chat.reload").setup()
     end
+
+    settings = M.options
     return M.options
 end
 
