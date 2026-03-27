@@ -66,8 +66,8 @@ function M.setup_keybindings()
         silent = true,
     })
 
-    -- Map ESC to close in normal mode
-    vim.keymap.set("n", "<Esc>", ":KiroChat<CR>", {
+    -- Map configurable key to close in normal mode
+    vim.keymap.set("n", settings.close_normal_keymap, ":KiroChat<CR>", {
         buffer = state.chat.buffer_id,
         noremap = true,
         silent = true,

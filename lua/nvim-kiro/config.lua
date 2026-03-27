@@ -17,6 +17,8 @@ M.options = {
     reload = true,
     -- Set keybinding to hide the chat window (Use special keys as this will run when the terminal is open)
     close_keymap = "<C-q>",
+    -- Set keybinding to close the chat window from normal mode
+    close_normal_keymap = "<Esc>",
     cli_agent = {
         -- Set cli agent binnary name
         binnary = "kiro-cli",

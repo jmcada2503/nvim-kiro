@@ -75,7 +75,8 @@ Or with [config options](#configuration)
             debug = false,
             window_type = 'split',
             reload = true,
-            close_keymap = '<C-q>'
+            close_keymap = '<C-q>',
+            close_normal_keymap = '<Esc>'
         })
     end
 }
@@ -122,6 +123,7 @@ These keybindings are active **only** in the Kiro chat buffer:
 | Terminal | `<C-j>` | Insert newline | For multi-line messages |
 | Terminal | `<Esc>` | Enter normal mode | Standard terminal behavior |
 | Terminal | `<C-q>` | Hide chat window | Configurable via `close_keymap` |
+| Normal | `<Esc>` | Close chat window | Configurable via `close_normal_keymap` |
 
 ### Exiting Terminal Mode
 
@@ -162,7 +164,10 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
     reload = true,
 
     -- Keybinding to close chat from terminal mode
-    close_keymap = '<C-q>'
+    close_keymap = '<C-q>',
+
+    -- Keybinding to close chat from normal mode
+    close_normal_keymap = '<Esc>'
 }
 ```
 
@@ -174,6 +179,7 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
 | `window_type` | string | `'float'` | Window type: `'split'` (vertical split) or `'float'` (floating window) |
 | `reload` | boolean | `true` | Enable automatic file reload with conflict detection |
 | `close_keymap` | string | `'<C-q>'` | Terminal mode keybinding to close chat window |
+| `close_normal_keymap` | string | `'<Esc>'` | Normal mode keybinding to close chat window |
 
 ---
 <br>

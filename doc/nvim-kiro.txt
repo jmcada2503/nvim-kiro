@@ -53,7 +53,8 @@ nvim-kiro.setup({opts})
             debug = false,
             window_type = 'float',
             reload = true,
-            close_keymap = '<C-q>'
+            close_keymap = '<C-q>',
+            close_normal_keymap = '<Esc>'
         })
 <
 
@@ -114,6 +115,12 @@ Configuration options for nvim-kiro:
         
         Terminal mode keybinding to close the chat window.
 
+    close_normal_keymap                      *nvim-kiro.config.close_normal_keymap*
+        Type: string
+        Default: `'<Esc>'`
+        
+        Normal mode keybinding to close the chat window.
+
 ==============================================================================
 KEYBINDINGS                                              *nvim-kiro-keybindings*
 
@@ -128,7 +135,7 @@ Terminal Mode:
     <C-q>       Hide chat window (configurable via close_keymap)
 
 Normal Mode:
-    <Esc>       Close chat window
+    <Esc>       Close chat window (configurable via close_normal_keymap)
 
 Quick Close:
     Press <Esc> twice to close the chat window:
