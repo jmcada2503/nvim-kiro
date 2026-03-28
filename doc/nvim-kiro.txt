@@ -21,7 +21,7 @@ current file, line number, and project context.
 Key Features:
   • Terminal-based chat interface (split or floating window)
   • Automatic context injection (file path, line number, project root)
-  • Smart file reload handling with conflict detection
+  • Smart file reload handling with conflict detection and diff view
   • Minimal configuration with sensible defaults
 
 ==============================================================================
@@ -108,6 +108,13 @@ Configuration options for nvim-kiro:
         Default: `true`
         
         Enable automatic file reload handling with conflict detection.
+        When a file changes on disk and you have unsaved changes, you
+        will be prompted with three options:
+          • Yes  - Discard local changes and reload from disk
+          • No   - Keep your local changes
+          • Diff - Open a side-by-side diff view (local changes on left,
+                   disk version on right). Edit and save the left buffer
+                   to be prompted to confirm it as the final version.
 
     close_keymap                                    *nvim-kiro.config.close_keymap*
         Type: string

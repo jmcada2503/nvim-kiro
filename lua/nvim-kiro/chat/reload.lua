@@ -45,9 +45,26 @@ function M.prompt_conflict_resolution(bufnr)
         -- No - keep local changes
         vim.v.fcs_choice = ""
     elseif choice == 3 then
-        -- Diff - open diff view
-        vim.cmd("diffthis")
-        vim.cmd("vsplit | edit! | diffthis")
+        -- Diff - open diff view (deferred to avoid E811)
+        vim.v.fcs_choice = ""
+        vim.schedule(function()
+            vim.cmd("rightbelow vert new | set buftype=nofile | r # | 0d_ | diffthis")
+            local scratch_buf = vim.api.nvim_get_current_buf()
+            vim.cmd("wincmd p | diffthis")
+            vim.api.nvim_create_autocmd("BufWritePost", {
+                buffer = bufnr,
+                callback = function()
+                    local confirm = vim.fn.confirm("Save this as the final version?", "&Yes\n&No", 2)
+                    if confirm == 1 then
+                        vim.cmd("diffoff!")
+                        if vim.api.nvim_buf_is_valid(scratch_buf) then
+                            vim.cmd("bdelete " .. scratch_buf)
+                        end
+                        return true -- removes the autocmd
+                    end
+                end,
+            })
+        end)
     end
 end
 

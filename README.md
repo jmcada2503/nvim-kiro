@@ -29,7 +29,7 @@ nvim-kiro is a Neovim plugin that integrates kiro-cli chat functionality directl
 **Key Features:**
 - Terminal-based chat interface (split or floating window)
 - Automatic context injection (file path, line number, project root)
-- Smart file reload handling with conflict detection
+- Smart file reload handling with conflict detection and diff view
 - Minimal configuration with sensible defaults
 
 ---
@@ -177,7 +177,7 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
 |--------|------|---------|-------------|
 | `debug` | boolean | `false` | Print debug logs for events and actions |
 | `window_type` | string | `'float'` | Window type: `'split'` (vertical split) or `'float'` (floating window) |
-| `reload` | boolean | `true` | Enable automatic file reload with conflict detection |
+| `reload` | boolean | `true` | Enable automatic file reload with conflict detection and diff view |
 | `close_keymap` | string | `'<C-q>'` | Terminal mode keybinding to close chat window |
 | `close_normal_keymap` | string | `'<Esc>'` | Normal mode keybinding to close chat window |
 
@@ -199,6 +199,10 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
 **File reload not working:**
 - Verify `reload = true` in config
 - Check that `autoread` is set: `:set autoread?`
+- When a file changes on disk and you have unsaved changes, you'll be prompted to:
+  - **Yes**: Discard local changes and reload from disk
+  - **No**: Keep your local changes
+  - **Diff**: Open a side-by-side diff view (local changes on left, disk version on right). Edit and save the left buffer — you'll be asked to confirm it as the final version
 
 **Keybindings not working:**
 - Ensure you're in the correct mode (terminal vs normal)
