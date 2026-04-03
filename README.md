@@ -30,6 +30,7 @@ nvim-kiro is a Neovim plugin that integrates kiro-cli chat functionality directl
 - Terminal-based chat interface (split or floating window)
 - Automatic context injection (file path, line number, project root)
 - Smart file reload handling with conflict detection and diff view
+- Edit mode for composing prompts with full vim motions
 - Minimal configuration with sensible defaults
 
 ---
@@ -76,7 +77,8 @@ Or with [config options](#configuration)
             window_type = 'split',
             reload = true,
             close_keymap = '<C-q>',
-            close_normal_keymap = '<Esc>'
+            close_normal_keymap = '<Esc>',
+            edit_keymap = '<C-e>'
         })
     end
 }
@@ -123,6 +125,7 @@ These keybindings are active **only** in the Kiro chat buffer:
 | Terminal | `<C-j>` | Insert newline | For multi-line messages |
 | Terminal | `<Esc>` | Enter normal mode | Standard terminal behavior |
 | Terminal | `<C-q>` | Hide chat window | Configurable via `close_keymap` |
+| Terminal | `<C-e>` | Open edit mode | Configurable via `edit_keymap` |
 | Normal | `<Esc>` | Close chat window | Configurable via `close_normal_keymap` |
 
 ### Exiting Terminal Mode
@@ -167,7 +170,10 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
     close_keymap = '<C-q>',
 
     -- Keybinding to close chat from normal mode
-    close_normal_keymap = '<Esc>'
+    close_normal_keymap = '<Esc>',
+
+    -- Keybinding to open edit mode for the current prompt
+    edit_keymap = '<C-e>'
 }
 ```
 
@@ -180,6 +186,7 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
 | `reload` | boolean | `true` | Enable automatic file reload with conflict detection and diff view |
 | `close_keymap` | string | `'<C-q>'` | Terminal mode keybinding to close chat window |
 | `close_normal_keymap` | string | `'<Esc>'` | Normal mode keybinding to close chat window |
+| `edit_keymap` | string | `'<C-e>'` | Terminal mode keybinding to open edit mode for the current prompt |
 
 ---
 <br>

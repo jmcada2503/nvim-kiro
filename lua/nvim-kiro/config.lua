@@ -19,6 +19,8 @@ M.options = {
     close_keymap = "<C-q>",
     -- Set keybinding to close the chat window from normal mode
     close_normal_keymap = "<Esc>",
+    -- Set keybinding to open edit mode for the current prompt
+    edit_keymap = "<C-e>",
     cli_agent = {
         -- Set cli agent binnary name
         binnary = "kiro-cli",

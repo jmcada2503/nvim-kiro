@@ -15,6 +15,7 @@ nvim-kiro/
 │   │   ├── context.lua      # Context extraction utilities
 │   │   ├── actions.lua      # Chat actions (add file/selection, agent swap)
 │   │   ├── utils.lua        # Chat utility functions
+│   │   ├── editor.lua       # Edit mode for prompt composition
 │   │   └── reload.lua       # File change detection and reload
 │   └── utils/
 │       └── log.lua          # Logging utilities
@@ -48,6 +49,7 @@ nvim-kiro/
 | `chat/context.lua` | Extract file/line/root context from buffers |
 | `chat/actions.lua` | Chat actions (add file/selection, agent swap) |
 | `chat/utils.lua` | Chat utility functions |
+| `chat/editor.lua` | Edit mode: scratch buffer for prompt editing with vim motions |
 | `chat/reload.lua` | Handle external file changes with conflict resolution |
 | `utils/log.lua` | Debug logging and deprecation warnings |
 
@@ -72,6 +74,21 @@ chat/keybindings.lua intercepts Enter → chat/context.lua gets context
 Send context + message to kiro-cli via chansend()
     ↓
 Kiro responds in terminal
+```
+
+### Edit Mode Flow
+
+```
+User presses <C-e> in chat (terminal or normal mode)
+    ↓
+chat/editor.lua closes chat window
+    ↓
+Opens scratch buffer with current prompt (last_input)
+    ↓
+User edits with full vim motions
+    ↓
+:w → Update prompt in terminal, reopen chat window
+:q → Cancel, reopen chat window with original prompt
 ```
 
 ### Context Injection

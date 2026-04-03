@@ -9,6 +9,7 @@ function M.setup()
             last_context = nil,
             last_input = "",
             pending_input = false,
+            editor_active = false,
         },
         source = {
             buffer_id = nil,
@@ -22,6 +23,7 @@ function M.reset_state()
     _G.NvimKiroPlugin.state.chat.window_id = nil
     _G.NvimKiroPlugin.state.chat.last_context = nil
     _G.NvimKiroPlugin.state.chat.last_input = ""
+    _G.NvimKiroPlugin.state.chat.editor_active = false
     _G.NvimKiroPlugin.state.source.buffer_id = nil
 end
 

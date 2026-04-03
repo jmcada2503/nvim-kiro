@@ -66,11 +66,17 @@ function M.is_window_open()
 end
 
 function M.open_window()
+    if M.is_window_open() then
+        vim.api.nvim_set_current_win(state.chat.window_id)
+        vim.cmd("startinsert")
+        return
+    end
+
     local window_config = config.get_window_config()
     if window_config then
         state.chat.window_id = vim.api.nvim_open_win(state.chat.buffer_id, true, window_config)
     else
-        vim.cmd("vsplit")
+        vim.cmd("50vsplit")
         state.chat.window_id = vim.api.nvim_get_current_win()
         vim.api.nvim_win_set_buf(state.chat.window_id, state.chat.buffer_id)
     end

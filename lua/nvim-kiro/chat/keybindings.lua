@@ -78,6 +78,11 @@ function M.setup_keybindings()
         noremap = true,
         silent = true,
     })
+
+    -- Edit mode keybinding
+    vim.keymap.set({ "t", "n" }, settings.edit_keymap, function()
+        require("nvim-kiro.chat.editor").open()
+    end, { buffer = state.chat.buffer_id, silent = true })
 end
 
 return M

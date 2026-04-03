@@ -54,7 +54,8 @@ nvim-kiro.setup({opts})
             window_type = 'float',
             reload = true,
             close_keymap = '<C-q>',
-            close_normal_keymap = '<Esc>'
+            close_normal_keymap = '<Esc>',
+            edit_keymap = '<C-e>'
         })
 <
 
@@ -128,6 +129,14 @@ Configuration options for nvim-kiro:
         
         Normal mode keybinding to close the chat window.
 
+    edit_keymap                                      *nvim-kiro.config.edit_keymap*
+        Type: string
+        Default: `'<C-e>'`
+        
+        Terminal mode keybinding to open edit mode. Opens the current
+        prompt in an editable buffer with full vim motions. Use :w to
+        send the edited prompt back, or :q! to cancel.
+
 ==============================================================================
 KEYBINDINGS                                              *nvim-kiro-keybindings*
 
@@ -140,6 +149,7 @@ Terminal Mode:
     <C-j>       Insert newline (for multi-line messages)
     <Esc>       Enter normal mode
     <C-q>       Hide chat window (configurable via close_keymap)
+    <C-e>       Open edit mode (configurable via edit_keymap)
 
 Normal Mode:
     <Esc>       Close chat window (configurable via close_normal_keymap)

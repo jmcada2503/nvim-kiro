@@ -15,18 +15,28 @@ function M.setup(opts)
     local interface = require("nvim-kiro.chat.interface")
 
     -- setup plugin commands
-    vim.api.nvim_create_user_command("KiroChat", function()
+    local function guard(fn)
+        return function()
+            if _G.NvimKiroPlugin.state.chat.editor_active then
+                vim.notify("Close KiroChat edit mode first (:w to send, :q! to cancel)", vim.log.levels.WARN)
+                return
+            end
+            fn()
+        end
+    end
+
+    vim.api.nvim_create_user_command("KiroChat", guard(function()
         chat.toggle_chat()
-    end, {})
-    vim.api.nvim_create_user_command("KiroAddFileToContext", function()
+    end), {})
+    vim.api.nvim_create_user_command("KiroAddFileToContext", guard(function()
         chat.add_current_file_to_context()
-    end, {})
-    vim.api.nvim_create_user_command("KiroAddSelectionToContext", function()
+    end), {})
+    vim.api.nvim_create_user_command("KiroAddSelectionToContext", guard(function()
         chat.add_selection_to_context()
-    end, {range=true})
-    vim.api.nvim_create_user_command("KiroAgentSwap", function()
+    end), {range=true})
+    vim.api.nvim_create_user_command("KiroAgentSwap", guard(function()
         chat.select_agent()
-    end, {})
+    end), {})
 
     vim.defer_fn(function()
         interface.initialize_cli_agent()
