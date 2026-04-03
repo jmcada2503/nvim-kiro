@@ -213,7 +213,7 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
 
 **Keybindings not working:**
 - Ensure you're in the correct mode (terminal vs normal)
-- Use `<C-\><C-n>` to exit terminal mode before using normal mode bindings
+- Press `<Esc>` to enter normal mode before using normal mode bindings
 
 ---
 <br>
