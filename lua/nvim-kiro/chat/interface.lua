@@ -76,7 +76,7 @@ function M.open_window()
     if window_config then
         state.chat.window_id = vim.api.nvim_open_win(state.chat.buffer_id, true, window_config)
     else
-        vim.cmd("50vsplit")
+        vim.cmd("vsplit")
         state.chat.window_id = vim.api.nvim_get_current_win()
         vim.api.nvim_win_set_buf(state.chat.window_id, state.chat.buffer_id)
     end
