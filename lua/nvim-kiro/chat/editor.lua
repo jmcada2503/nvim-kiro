@@ -32,7 +32,7 @@ function M.open()
         window_config.title = " Kiro Chat - [Edit Mode] "
         vim.api.nvim_open_win(buf, true, window_config)
     else
-        vim.cmd("50vsplit")
+        vim.cmd("vsplit")
         vim.api.nvim_win_set_buf(vim.api.nvim_get_current_win(), buf)
     end
     vim.bo[buf].modified = false
