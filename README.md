@@ -173,7 +173,15 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
     close_normal_keymap = '<Esc>',
 
     -- Keybinding to open edit mode for the current prompt
-    edit_keymap = '<C-e>'
+    edit_keymap = '<C-e>',
+
+    -- CLI agent configuration
+    cli_agent = {
+        -- CLI agent binary name
+        binary = 'kiro-cli',
+        -- Command that opens the chat interface
+        command = 'kiro-cli chat'
+    }
 }
 ```
 
@@ -187,6 +195,8 @@ vim.keymap.set('n', '<leader>kt', ':KiroChat<CR>', { desc = 'Toggle Kiro Chat' }
 | `close_keymap` | string | `'<C-q>'` | Terminal mode keybinding to close chat window |
 | `close_normal_keymap` | string | `'<Esc>'` | Normal mode keybinding to close chat window |
 | `edit_keymap` | string | `'<C-e>'` | Terminal mode keybinding to open edit mode for the current prompt |
+| `cli_agent.binary` | string | `'kiro-cli'` | CLI agent binary name |
+| `cli_agent.command` | string | `'kiro-cli chat'` | Command that opens the chat interface |
 
 ---
 <br>

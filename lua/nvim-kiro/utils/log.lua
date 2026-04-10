@@ -8,8 +8,8 @@ function M.agent_not_installed()
         "chat",
         string.format(
             "%s not found in PATH. Please install %s first.",
-            settings.cli_agent.binnary,
-            settings.cli_agent.binnary
+            settings.cli_agent.binary,
+            settings.cli_agent.binary
         )
     )
 end

@@ -137,6 +137,18 @@ Configuration options for nvim-kiro:
         prompt in an editable buffer with full vim motions. Use :w to
         send the edited prompt back, or :q! to cancel.
 
+    cli_agent.binary                            *nvim-kiro.config.cli_agent.binary*
+        Type: string
+        Default: `'kiro-cli'`
+        
+        CLI agent binary name.
+
+    cli_agent.command                          *nvim-kiro.config.cli_agent.command*
+        Type: string
+        Default: `'kiro-cli chat'`
+        
+        Command that opens the chat interface.
+
 ==============================================================================
 KEYBINDINGS                                              *nvim-kiro-keybindings*
 

@@ -1,6 +1,10 @@
 ## To Do
 
+- Review bug with agent swap (context string still being added)
+    > Context added when writing a prefix of the agent name
 - Add possibility to add something from Kiro response to context
+- Add a question to ask if the user wants to save the chat before closing Kiro with ctrl+c
+- Research better ways to manage context in projects -> look for possible implementations to improve user experience on context management for a project
 
 ## Doing
 

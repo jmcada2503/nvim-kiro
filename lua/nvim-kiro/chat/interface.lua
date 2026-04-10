@@ -21,7 +21,7 @@ end
 
 
 function M.is_agent_installed()
-    if vim.fn.executable(settings.cli_agent.binnary) == 0 then
+    if vim.fn.executable(settings.cli_agent.binary) == 0 then
         return false
     end
     return true

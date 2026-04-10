@@ -22,8 +22,8 @@ M.options = {
     -- Set keybinding to open edit mode for the current prompt
     edit_keymap = "<C-e>",
     cli_agent = {
-        -- Set cli agent binnary name
-        binnary = "kiro-cli",
+        -- Set cli agent binary name
+        binary = "kiro-cli",
         -- Set command that opens the chat interface with cli agent
         command = "kiro-cli chat"
     },
